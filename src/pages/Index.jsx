@@ -4,11 +4,29 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
 import { PlusCircle, DollarSign, FileText, CheckSquare } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast"
 
 const Index = () => {
   const [budget, setBudget] = useState(10000);
   const [fundsRaised, setFundsRaised] = useState(5000);
   const [expenses, setExpenses] = useState(2000);
+  const { toast } = useToast();
+
+  const generateReport = () => {
+    const report = `
+      Project Report:
+      Total Budget: $${budget.toLocaleString()}
+      Funds Raised: $${fundsRaised.toLocaleString()}
+      Total Expenses: $${expenses.toLocaleString()}
+      Remaining Balance: $${(fundsRaised - expenses).toLocaleString()}
+      Fundraising Progress: ${((fundsRaised / budget) * 100).toFixed(2)}%
+    `;
+    toast({
+      title: "Project Report Generated",
+      description: report,
+      duration: 10000,
+    });
+  };
 
   return (
     <div className="min-h-screen p-8 bg-gray-100">
@@ -87,7 +105,7 @@ const Index = () => {
       </Tabs>
 
       <div className="mt-8 flex justify-end">
-        <Button variant="outline" className="mr-4">
+        <Button variant="outline" className="mr-4" onClick={generateReport}>
           <FileText className="mr-2 h-4 w-4" /> Generate Report
         </Button>
       </div>
