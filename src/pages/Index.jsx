@@ -5,11 +5,16 @@ import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
 import { PlusCircle, DollarSign, FileText, CheckSquare } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 const Index = () => {
   const [budget, setBudget] = useState(10000);
   const [fundsRaised, setFundsRaised] = useState(5000);
   const [expenses, setExpenses] = useState(2000);
+  const [newExpense, setNewExpense] = useState({ amount: '', description: '' });
+  const [newDonation, setNewDonation] = useState({ amount: '', donor: '' });
+  const [newTask, setNewTask] = useState({ description: '', deadline: '' });
   const { toast } = useToast();
 
   const generateReport = () => {
@@ -26,6 +31,39 @@ const Index = () => {
       description: report,
       duration: 10000,
     });
+  };
+
+  const handleAddExpense = () => {
+    if (newExpense.amount && newExpense.description) {
+      setExpenses(expenses + parseFloat(newExpense.amount));
+      setNewExpense({ amount: '', description: '' });
+      toast({
+        title: "Expense Added",
+        description: `Added expense: $${newExpense.amount} for ${newExpense.description}`,
+      });
+    }
+  };
+
+  const handleAddDonation = () => {
+    if (newDonation.amount && newDonation.donor) {
+      setFundsRaised(fundsRaised + parseFloat(newDonation.amount));
+      setNewDonation({ amount: '', donor: '' });
+      toast({
+        title: "Donation Logged",
+        description: `Logged donation: $${newDonation.amount} from ${newDonation.donor}`,
+      });
+    }
+  };
+
+  const handleAddTask = () => {
+    if (newTask.description && newTask.deadline) {
+      // In a real app, you'd add this to a tasks array
+      setNewTask({ description: '', deadline: '' });
+      toast({
+        title: "Task Added",
+        description: `Added task: ${newTask.description} due ${newTask.deadline}`,
+      });
+    }
   };
 
   return (
@@ -73,8 +111,28 @@ const Index = () => {
               <CardDescription>Track and categorize project expenses</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button><PlusCircle className="mr-2 h-4 w-4" /> Add Expense</Button>
-              {/* Expense list and management components will go here */}
+              <div className="flex space-x-2 mb-4">
+                <div className="flex-1">
+                  <Label htmlFor="expenseAmount">Amount</Label>
+                  <Input
+                    id="expenseAmount"
+                    value={newExpense.amount}
+                    onChange={(e) => setNewExpense({...newExpense, amount: e.target.value})}
+                    type="number"
+                    placeholder="Enter amount"
+                  />
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="expenseDescription">Description</Label>
+                  <Input
+                    id="expenseDescription"
+                    value={newExpense.description}
+                    onChange={(e) => setNewExpense({...newExpense, description: e.target.value})}
+                    placeholder="Enter description"
+                  />
+                </div>
+              </div>
+              <Button onClick={handleAddExpense}><PlusCircle className="mr-2 h-4 w-4" /> Add Expense</Button>
             </CardContent>
           </Card>
         </TabsContent>
@@ -85,8 +143,28 @@ const Index = () => {
               <CardDescription>Monitor donations and set goals</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button><DollarSign className="mr-2 h-4 w-4" /> Log Donation</Button>
-              {/* Fundraising components will go here */}
+              <div className="flex space-x-2 mb-4">
+                <div className="flex-1">
+                  <Label htmlFor="donationAmount">Amount</Label>
+                  <Input
+                    id="donationAmount"
+                    value={newDonation.amount}
+                    onChange={(e) => setNewDonation({...newDonation, amount: e.target.value})}
+                    type="number"
+                    placeholder="Enter amount"
+                  />
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="donorName">Donor Name</Label>
+                  <Input
+                    id="donorName"
+                    value={newDonation.donor}
+                    onChange={(e) => setNewDonation({...newDonation, donor: e.target.value})}
+                    placeholder="Enter donor name"
+                  />
+                </div>
+              </div>
+              <Button onClick={handleAddDonation}><DollarSign className="mr-2 h-4 w-4" /> Log Donation</Button>
             </CardContent>
           </Card>
         </TabsContent>
@@ -97,8 +175,27 @@ const Index = () => {
               <CardDescription>Organize and track project tasks</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button><CheckSquare className="mr-2 h-4 w-4" /> Add Task</Button>
-              {/* Task management components will go here */}
+              <div className="flex space-x-2 mb-4">
+                <div className="flex-1">
+                  <Label htmlFor="taskDescription">Task Description</Label>
+                  <Input
+                    id="taskDescription"
+                    value={newTask.description}
+                    onChange={(e) => setNewTask({...newTask, description: e.target.value})}
+                    placeholder="Enter task description"
+                  />
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="taskDeadline">Deadline</Label>
+                  <Input
+                    id="taskDeadline"
+                    value={newTask.deadline}
+                    onChange={(e) => setNewTask({...newTask, deadline: e.target.value})}
+                    type="date"
+                  />
+                </div>
+              </div>
+              <Button onClick={handleAddTask}><CheckSquare className="mr-2 h-4 w-4" /> Add Task</Button>
             </CardContent>
           </Card>
         </TabsContent>
